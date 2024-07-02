@@ -47,7 +47,8 @@ public class InQueueListener {
             log.info("Message received from the queue '{}' and message is \n {}", queueNameInbound, message);
             // Thread.sleep(5000);
             outgoingMessageData = recordService.validate(message);
-            jmsTemplateOutbound.convertAndSend(queueNameInbound, getJson(outgoingMessageData.getData()));
+            log.info("Message ready to publish to queue {} ", queueNameOutbound, message);
+            jmsTemplateOutbound.convertAndSend(queueNameOutbound, getJson(outgoingMessageData.getData()));
             log.info("All Good Message committed ============");
         } catch (BackoutException e) {
             log.info("Message couldn't processed due to {} so now system is sending the incomingMessageData object to queue {} and object is {} ", e.getMessage(), backoutQueueName, e.getIncomingMessageData());
