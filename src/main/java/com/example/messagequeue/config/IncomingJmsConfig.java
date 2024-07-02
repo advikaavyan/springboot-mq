@@ -1,7 +1,9 @@
 package com.example.messagequeue.config;
 
 import jakarta.jms.ConnectionFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.RedeliveryPolicy;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,10 +12,12 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.web.client.RestTemplate;
 
 
 @Configuration
 @EnableJms
+@Slf4j
 public class IncomingJmsConfig {
 
     @Value("${messagequeue.inbound.brokerURI}")
@@ -29,13 +33,39 @@ public class IncomingJmsConfig {
     @Bean(name = "connectionFactoryInbound")
     @Primary
     public ConnectionFactory connectionFactoryInbound() {
-        System.out.println("==============brokerURI   ==" + brokerURI);
+        log.info("==============brokerURI   ==" + brokerURI);
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
         factory.setBrokerURL(brokerURI);
         factory.setUserName(brokerUsername);
         factory.setPassword(brokerPassword);
+
+        RedeliveryPolicy redeliveryPolicy = new RedeliveryPolicy();
+        redeliveryPolicy.setMaximumRedeliveries(2);
+        redeliveryPolicy.setInitialRedeliveryDelay(1000);
+        redeliveryPolicy.setBackOffMultiplier(2);
+        redeliveryPolicy.setUseExponentialBackOff(true);
+
+        factory.setRedeliveryPolicy(redeliveryPolicy);
+
         return factory;
     }
+
+  /*  @Bean
+    public ActiveMQConnectionFactory activeMQConnectionFactory() {
+        ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
+        factory.setBrokerURL("tcp://localhost:61616");
+        factory.setUserName("admin");
+        factory.setPassword("admin");
+
+        RedeliveryPolicy redeliveryPolicy = new RedeliveryPolicy();
+        redeliveryPolicy.setMaximumRedeliveries(2);
+        redeliveryPolicy.setInitialRedeliveryDelay(1000);
+        redeliveryPolicy.setBackOffMultiplier(2);
+        redeliveryPolicy.setUseExponentialBackOff(true);
+
+        factory.setRedeliveryPolicy(redeliveryPolicy);
+        return factory;
+    }*/
 
     @Bean(name = "jmsTemplateInbound")
     @Qualifier("jmsTemplateInbound")
@@ -43,7 +73,7 @@ public class IncomingJmsConfig {
     public JmsTemplate jmsTemplateInbound(@Qualifier("connectionFactoryInbound") ConnectionFactory connectionFactoryInbound) {
         JmsTemplate jmsTemplate = new JmsTemplate(connectionFactoryInbound);
         jmsTemplate.setSessionTransacted(true);
-        System.out.println("jmsTemplateInbound=="+jmsTemplate);
+        log.info("jmsTemplateInbound=="+jmsTemplate);
         return jmsTemplate;
     }
 

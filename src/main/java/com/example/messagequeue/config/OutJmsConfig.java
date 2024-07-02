@@ -1,6 +1,7 @@
 package com.example.messagequeue.config;
 
 import jakarta.jms.ConnectionFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import org.springframework.jms.core.JmsTemplate;
 
 @Configuration
 @EnableJms
+@Slf4j
 public class OutJmsConfig {
     @Value("${messagequeue.outbound.brokerURI}")
     private String brokerURI;
@@ -26,7 +28,7 @@ public class OutJmsConfig {
 
     @Bean(name = "connectionFactoryOutbound")
     public ConnectionFactory connectionFactoryOutbound() {
-        System.out.println("==============brokerURI   ==" + brokerURI);
+        log.info("==============brokerURI   ==" + brokerURI);
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
         factory.setBrokerURL(brokerURI);
         factory.setUserName(brokerUsername);
@@ -38,7 +40,7 @@ public class OutJmsConfig {
     public JmsTemplate jmsTemplateOutbound(@Qualifier("connectionFactoryOutbound") ConnectionFactory connectionFactoryOutbound) {
         JmsTemplate jmsTemplate = new JmsTemplate(connectionFactoryOutbound);
         jmsTemplate.setSessionTransacted(true);
-        System.out.println("jmsTemplateOutbound=="+jmsTemplate);
+        log.info("jmsTemplateOutbound=="+jmsTemplate);
         return jmsTemplate;
     }
 

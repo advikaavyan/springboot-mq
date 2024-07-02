@@ -1,21 +1,18 @@
 package com.example;
 
-import com.example.service.RecordService;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class MessageListener {
 
-    private final JmsTemplate jmsTemplate;
-    private final RecordService recordService; // Service to handle validation, enrichment, and persistence
+    //private final JmsTemplate jmsTemplate;
+   /* private final RecordService recordService; // Service to handle validation, enrichment, and persistence
 
     public MessageListener(JmsTemplate jmsTemplate, RecordService recordService) {
         this.jmsTemplate = jmsTemplate;
         this.recordService = recordService;
-    }
+    }*/
 
    /* @JmsListener(destination = "upstreamQueue")
     @Transactional

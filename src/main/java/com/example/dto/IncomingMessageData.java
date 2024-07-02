@@ -1,4 +1,4 @@
-package com.example;
+package com.example.dto;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,13 +9,11 @@ import lombok.Data;
 
 @Entity
 @Data
-public class RecordEntity {
+public class IncomingMessageData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String data;
     private Long retryCount;
-
-    // Getters and setters
 }
