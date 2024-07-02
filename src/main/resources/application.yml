@@ -1,0 +1,78 @@
+## MySQL Configuration
+#spring.datasource.url: jdbc:mysql://localhost:3306/yourdb
+#spring.datasource.username: root
+#spring.datasource.password: yourpassword
+#spring.jpa.hibernate.ddl-auto: update
+#
+## JMS Configuration
+#spring.jms.listener.auto-startup: true
+##spring.jms.pub-sub-domain: false
+#
+## Retry Configuration
+#retry.max.attempts: 5
+#retry.backoff: 2000
+#
+#listener:
+#  main:
+#    brokerURI: tcp://localhost:61616
+#    brokerUserName: admin
+#    brokerPassword: admin
+#    queueName: AMPS_TO_FAB
+#  backout:
+#    brokerURI: tcp://localhost:61616
+#    brokerUserName: admin
+#    brokerPassword: admin
+#    queueName: BACKOUT_TO_FAB
+#
+#publisher:
+#  outgoing:
+#    brokerURI: tcp://localhost:61617
+#    brokerUserName: admin
+#    brokerPassword: admin
+#    queueName: FAB_TO_BACKOUT
+#  backout:
+#    brokerURI: tcp://localhost:61616
+#    brokerUserName: admin
+#    brokerPassword: admin
+#    queueName: FAB_TO_BACKOUT
+#  deadLetter:
+#    brokerURI: tcp://localhost:61616
+#    brokerUserName: admin
+#    brokerPassword: admin
+#    queueName: FAB_TO_BACKOUT
+# MySQL Configuration
+spring.datasource.url: jdbc:mysql://localhost:3306/yourdb
+spring.datasource.username: root
+spring.datasource.password: yourpassword
+spring.jpa.hibernate.ddl-auto: update
+
+# JMS Configuration
+spring.jms.listener.auto-startup: true
+#spring.jms.pub-sub-domain: false
+
+# Retry Configuration
+retry.max.attempts: 5
+retry.backoff: 2000
+
+
+
+messagequeue:
+  inbound:
+    queueName: IN.TO.FAB
+    brokerURI: tcp://localhost:61616
+    brokerUserName: admin
+    brokerPassword: admin
+
+  internal:
+    backoutQueueName: FAB_TO_BACKOUT
+    deadletterQueueName: FAB_TO_DEADLETTER
+    brokerURI: tcp://localhost:61617
+    brokerUserName: admin
+    brokerPassword: admin
+
+  outbound:
+    queueName: FAB.TO.OUT
+    brokerURI: tcp://localhost:61618
+    brokerUserName: admin
+    brokerPassword: admin
+
